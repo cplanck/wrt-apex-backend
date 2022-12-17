@@ -9,7 +9,7 @@ class APEX_VERSION_admin(admin.ModelAdmin):
     list_display = ('name','details')
 
 class APEX_DEPLOYMENT_admin(admin.ModelAdmin):
-    list_display = ('apex','location', 'start_date', 'end_date')
+    list_display = ('apex','location', 'start_date', 'end_date')  
 
 
 admin.site.register(APEX, APEX_admin)
