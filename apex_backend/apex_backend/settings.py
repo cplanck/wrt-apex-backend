@@ -59,7 +59,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'apex_backend.wsgi.application'
 
-
 # Database
 DATABASES = {
     'default': {
