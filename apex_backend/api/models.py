@@ -36,4 +36,14 @@ class APEX_DEPLOYMENT(models.Model):
     def __str__(self):
         return str(self.location)
 
+class APEX_DATA(models.Model):
+    uniqueID = models.CharField(max_length = 100) 
+    time_stamp = models.DecimalField(decimal_places=13,max_digits=21, default=0,null=True, blank=True)
+    latitude = models.DecimalField(decimal_places=8, max_digits=20,null=True, blank=True)
+    longitude = models.DecimalField(decimal_places=8, max_digits=20,null=True, blank=True)
+    deployment = models.ForeignKey(APEX_DEPLOYMENT, on_delete=models.CASCADE, related_name = 'apex_deployment', null=True, blank=True)
+    
+    class Meta:
+        verbose_name = 'APEX Data'
+        verbose_name_plural = 'APEX Data'
 
