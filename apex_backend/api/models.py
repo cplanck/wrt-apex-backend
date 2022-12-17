@@ -1,4 +1,5 @@
 from django.db import models
+from customers.models import CUSTOMER
 
 class APEX_VERSION(models.Model):
     name = models.CharField(max_length=50)
@@ -36,7 +37,7 @@ class APEX_DEPLOYMENT(models.Model):
     def __str__(self):
         return str(self.location)
 
-class APEX_DATA(models.Model):
+class APEX_RAW_DATA(models.Model):
     uniqueID = models.CharField(max_length = 100) 
     time_stamp = models.DecimalField(decimal_places=13,max_digits=21, default=0,null=True, blank=True)
     latitude = models.DecimalField(decimal_places=8, max_digits=20,null=True, blank=True)
@@ -44,6 +45,39 @@ class APEX_DATA(models.Model):
     deployment = models.ForeignKey(APEX_DEPLOYMENT, on_delete=models.CASCADE, related_name = 'apex_deployment', null=True, blank=True)
     
     class Meta:
-        verbose_name = 'APEX Data'
-        verbose_name_plural = 'APEX Data'
+        verbose_name = 'APEX Raw Data'
+        verbose_name_plural = 'APEX Raw Data'
 
+    def __str__(self):
+        return str(self.uniqueID)
+
+
+class APEX_RAW_DATA_FILENAMES(models.Model):
+    filename = models.CharField(max_length = 200)
+    entries_written = models.IntegerField(null=True, blank=True)
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'APEX Data Filename'
+        verbose_name_plural = 'APEX Data Filenames'
+
+    def __str__(self):
+        return str(self.filename)
+
+class DEPLOYMENT_SITE(models.Model):
+    name = models.CharField(max_length = 100) 
+    post_data_to_database = models.BooleanField(default=True)
+    owner = models.ForeignKey(CUSTOMER, on_delete=models.CASCADE, related_name = 'apex_deployment', null=True, blank=True)
+    location = models.CharField(max_length=100, blank=True)
+    street = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=50, blank=True)
+    zip_code = models.CharField(max_length=50, blank=True)
+    country = models.CharField(max_length=100, blank=True)
+    
+    class Meta:
+        verbose_name = 'Deployment Site'
+        verbose_name_plural = 'Deployment Sites'
+
+    def __str__(self):
+        return str(self.name)
