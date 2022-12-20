@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from api.models import *
 
-class APEX_Data_Serializer(serializers.ModelSerializer):
+class APEX_RAW_DATA_Serializer(serializers.ModelSerializer):
     class Meta:
         model = APEX_RAW_DATA
         fields = '__all__'

@@ -5,6 +5,8 @@ from rest_framework import routers
 
 router = routers.SimpleRouter()
 router.register(r'apex/filenames', api_views.APEX_FILENAMES, 'APEX_FILENAMES')
+router.register(r'apex/deployments', api_views.APEX_DEPLOYMENTS, 'APEX_FILENAMES')
+router.register(r'apex/crud', api_views.APEX_RAW_DATA_CRUD, 'APEX_RAW_DATA_CRUD')
 router.register(r'apex', api_views.APEX, 'APEX')
 
 
