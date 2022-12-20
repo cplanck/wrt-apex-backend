@@ -44,6 +44,7 @@ class DEPLOYMENT_SITE(models.Model):
 
 class APEX_DEPLOYMENT(models.Model):
     apex = models.ForeignKey(APEX, on_delete=models.CASCADE, related_name = 'apex', null=True, blank=True)
+    status = models.BooleanField(default=False)
     deployment_site = models.ForeignKey(DEPLOYMENT_SITE, on_delete=models.CASCADE, related_name = 'deployment_site', null=True, blank=True)
     post_data_to_database = models.BooleanField(default=True)
     start_date = models.DateField(null=True, blank=True)

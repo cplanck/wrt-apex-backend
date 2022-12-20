@@ -7,15 +7,6 @@ from api.models import *
 import json
 
 
-# class APEX_Data(viewsets.ModelViewSet):
-
-# 	""" viewset for returning APEX data """
-
-# 	# permission_classes = [permissions.IsAuthenticated]
-# 	serializer_class = APEX_Data_Serializer
-# 	queryset = APEX_RAW_DATA.objects.all()
-
-
 class APEX(viewsets.ModelViewSet):
 
 	""" viewset for returning APEX metadata """
