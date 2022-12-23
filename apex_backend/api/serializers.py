@@ -23,4 +23,4 @@ class APEX_DEPLOYMENT_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = APEX_DEPLOYMENT
-        fields = ['id', 'apex' ,'status' ,'start_date', 'end_date', 'deployment_site']
+        fields = ['id', 'apex' ,'status' ,'start_date', 'end_date', 'deployment_site', 'utm_zone']

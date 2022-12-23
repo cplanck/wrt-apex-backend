@@ -9,7 +9,7 @@ class APEX_VERSION_admin(admin.ModelAdmin):
     list_display = ('name','details')
 
 class APEX_DEPLOYMENT_admin(admin.ModelAdmin):
-    list_display = ('apex', 'deployment_site','post_data_to_database', 'start_date', 'end_date')  
+    list_display = ('apex', 'deployment_site', 'utm_zone' ,'post_data_to_database', 'start_date', 'end_date')  
 
 class APEX_RAW_DATA_admin(admin.ModelAdmin):
     list_display = ('uniqueID','gps_hhmmss', 'latitude', 'longitude', 'deployment')  

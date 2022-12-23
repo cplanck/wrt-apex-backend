@@ -69,7 +69,7 @@ class APEX_DEPLOYMENTS(viewsets.ViewSet):
 
 		for deployment_site in deployment_sites_list:
 			site_name = deployment_site[0]
-			site_apexs = list(APEX_DEPLOYMENT.objects.filter(deployment_site__directory_name=site_name).filter(post_data_to_database=True).values_list('apex__name', flat=True))
+			site_apexs = list(APEX_DEPLOYMENT.objects.filter(deployment_site__directory_name=site_name).filter(post_data_to_database=True).values('id','apex__name', 'utm_zone'))
 			
 			if site_apexs:
 				response_list.append({site_name:site_apexs})
@@ -103,9 +103,13 @@ class APEX_RAW_DATA_CRUD(viewsets.ViewSet):
 
 			#serialize each item and save it if valid (there isn't already an entry with this uniqueID)
 			serializer = APEX_RAW_DATA_Serializer(data=item)
+
 			if serializer.is_valid():
 				serializer.save()
 				print('SERIALIZER VALID!')
+
+		
+		print(serializer.errors)
 
 		return Response({'entries added!'})
 		

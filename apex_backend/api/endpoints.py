@@ -49,6 +49,7 @@ class APEX_RAW_DATA_GIVEN_DEPLOYMENT(viewsets.ViewSet):
 		if apex_deployment:
 			data = APEX_RAW_DATA.objects.filter(deployment__id=apex_deployment)
 			serializer = APEX_RAW_DATA_Serializer(data, many=True)
+			print(serializer.data)
 			return(Response(serializer.data))
 
 		else:
