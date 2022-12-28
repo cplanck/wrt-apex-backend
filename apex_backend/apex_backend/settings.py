@@ -1,5 +1,6 @@
 from pathlib import Path
 import environ
+import os
 
 # Initialise environment variables
 env = environ.Env()
@@ -10,8 +11,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'xlwwg60%z)f5(f_m4girc7494m$471oel303o*qxhmh$njsb1h'
 
-# DEBUG = True if env('DEBUG') == 'True' else DEBUG = False
-
 if env('DEBUG') == 'True':
     DEBUG = True
 else:
@@ -19,6 +18,7 @@ else:
 
 ALLOWED_HOSTS = ['*']
 
+STATIC_ROOT = 'static'
 
 # Application definition
 INSTALLED_APPS = [
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'api',
     'customers',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
