@@ -69,7 +69,7 @@ class APEX_DEPLOYMENTS(viewsets.ViewSet):
 
 		for deployment_site in deployment_sites_list:
 			site_name = deployment_site[0]
-			site_apexs = list(APEX_DEPLOYMENT.objects.filter(deployment_site__directory_name=site_name).filter(post_data_to_database=True).values('id','apex__name', 'utm_zone'))
+			site_apexs = list(APEX_DEPLOYMENT.objects.filter(deployment_site__directory_name=site_name).filter(queue_for_decode=True).values('id','apex__name', 'utm_zone'))
 			
 			if site_apexs:
 				response_list.append({site_name:site_apexs})

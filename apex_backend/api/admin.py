@@ -9,7 +9,7 @@ class APEX_VERSION_admin(admin.ModelAdmin):
     list_display = ('name','details')
 
 class APEX_DEPLOYMENT_admin(admin.ModelAdmin):
-    list_display = ('apex', 'deployment_site', 'utm_zone' ,'post_data_to_database', 'start_date', 'end_date')  
+    list_display = ('apex', 'deployment_site', 'utm_zone', 'queue_for_decode', 'start_date', 'end_date')  
 
 class APEX_RAW_DATA_admin(admin.ModelAdmin):
     list_display = ('uniqueID','gps_hhmmss', 'latitude', 'longitude', 'deployment')  
@@ -26,6 +26,6 @@ admin.site.register(APEX_VERSION, APEX_VERSION_admin)
 admin.site.register(APEX_DEPLOYMENT, APEX_DEPLOYMENT_admin)
 admin.site.register(APEX_RAW_DATA, APEX_RAW_DATA_admin)
 admin.site.register(DEPLOYMENT_SITE, DEPLOYMENT_SITE_admin)
-admin.site.register(APEX_RAW_DATA_FILENAMES, APEX_RAW_DATA_FILENAMES_admin)
+# admin.site.register(APEX_RAW_DATA_FILENAMES, APEX_RAW_DATA_FILENAMES_admin)
 
 

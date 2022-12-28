@@ -1,5 +1,9 @@
 from django.db import models
 from customers.models import CUSTOMER
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 class APEX_VERSION(models.Model):
     name = models.CharField(max_length=50)
@@ -43,11 +47,12 @@ class DEPLOYMENT_SITE(models.Model):
         return str(self.name)
 
 class APEX_DEPLOYMENT(models.Model):
-    apex = models.ForeignKey(APEX, on_delete=models.CASCADE, related_name = 'apex', null=True, blank=True)
+    apex = models.ForeignKey(APEX, on_delete=models.CASCADE, related_name = 'apex', blank=True, null=True)
     status = models.BooleanField(default=False)
-    deployment_site = models.ForeignKey(DEPLOYMENT_SITE, on_delete=models.CASCADE, related_name = 'deployment_site', null=True, blank=True)
-    utm_zone =  models.CharField(max_length = 3, default='', null=True, blank=True)
-    post_data_to_database = models.BooleanField(default=True)
+    queue_for_decode = models.BooleanField(default=False)
+    deployment_site = models.ForeignKey(DEPLOYMENT_SITE, on_delete=models.CASCADE, related_name = 'deployment_site', blank=True, null=True)
+    utm_zone =  models.CharField(max_length = 3, default='')
+    # post_data_to_database = models.BooleanField(default=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
 
@@ -86,3 +91,9 @@ class APEX_RAW_DATA_FILENAMES(models.Model):
     def __str__(self):
         return str(self.filename)
 
+
+# automatically create API token for users
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

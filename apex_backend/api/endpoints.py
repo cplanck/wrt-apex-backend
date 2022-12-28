@@ -2,9 +2,13 @@
 
 from django.shortcuts import render
 from api.serializers import *
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework import viewsets, status, permissions
 from django.http import HttpResponse, HttpResponseRedirect
+from rest_framework.authtoken.models import Token
 from api.models import *
 from .helper_functions import *
 import json
@@ -16,6 +20,8 @@ class APEX_DEPLOYMENTS(viewsets.ViewSet):
 	Returns either all deployments or a single deployment if a query param is specified.
 	
 	"""
+
+	permission_classes = [IsAuthenticated]
 
 	def list(self, request):
 		
@@ -42,6 +48,8 @@ class APEX_RAW_DATA_GIVEN_DEPLOYMENT(viewsets.ViewSet):
 	
 	"""
 
+	permission_classes = [IsAuthenticated]
+
 	def list(self, request):
 
 		apex_deployment = self.request.query_params.get('deployment')
@@ -49,7 +57,6 @@ class APEX_RAW_DATA_GIVEN_DEPLOYMENT(viewsets.ViewSet):
 		if apex_deployment:
 			data = APEX_RAW_DATA.objects.filter(deployment__id=apex_deployment)
 			serializer = APEX_RAW_DATA_Serializer(data, many=True)
-			print(serializer.data)
 			return(Response(serializer.data))
 
 		else:
@@ -61,23 +68,25 @@ class APEX_DEPLOYMENT_STATISTICS(viewsets.ViewSet):
 
 	"""
 	Viewset for returning a statistics for a given APEX deployment. 
-	A 'deployment' query parameter is required.
-	As of 12/20/2022, 5:40PM: not sure how to evaluate if this is working. 
-	Need to plot lat/longs to get a better idea of the data. 
-	
+	A 'deployment' query parameter is required.	
 	"""
+
+	permission_classes = [IsAuthenticated]
+
 	def list(self, request):
 		apex_deployment = self.request.query_params.get('deployment')
 
 		if apex_deployment:
 			data = APEX_RAW_DATA.objects.filter(deployment__id=apex_deployment).order_by('gps_hhmmss')
+			num_datapoints = data.count()
+			print(num_datapoints)
 			serializer = APEX_RAW_DATA_Serializer(data, many=True)
 
 			# calculate statistical values to return:
 			# distance swept over entire deployment
 			meters_traveled, total_time = apex_area_swept(json.dumps(serializer.data))
 
-			return(Response({'meters_traveled' : meters_traveled, 'total_time': total_time}))
+			return(Response({'meters_traveled' : meters_traveled, 'total_time': total_time, 'num_datapoints': num_datapoints}))
 		
 		else:
 			return(Response('no stats...'))
@@ -89,6 +98,8 @@ class APEX_DEPLOYMENT_SITES(viewsets.ViewSet):
 	This view is similar to APEX_DEPLOYMENTS, but it doesn't care if post_data_to_database == False.
 	It returns a dictionary of every deployment site with a list of associated APEX machines as keys. 
 	"""
+
+	permission_classes = [IsAuthenticated]
 
 	def list(self, request):
 
@@ -106,7 +117,61 @@ class APEX_DEPLOYMENT_SITES(viewsets.ViewSet):
 		return Response(response_list)
 
 
+class DECODE_STATUS(viewsets.ViewSet):
 
-# user authentication
+	"""
+	Viewset for returning apex deployments that have queue_for_decode == True. Also responds to POST requests for
+	toggling queue_for_decode
+	"""
 
-# BONUS. A search endpoint for returning APEX deployments given a set of search criteria. 
+	permission_classes = [IsAuthenticated]
+
+	def list(self, request):
+
+		deployments = APEX_DEPLOYMENT.objects.filter(queue_for_decode=True)
+		print(deployments)
+		serializer = APEX_DECODE_Serializer(deployments, many=True)
+		return(Response(serializer.data))
+
+	def create(self, request): 
+		try: 
+			print(request.data)
+			apex = APEX_DEPLOYMENT.objects.filter(id=request.data['apex_id'])
+			print(apex)
+			apex.update(queue_for_decode=request.data['queue_for_decode'])
+			return(Response('Decode queue updated!'))
+		
+		except:
+			return(Response({'There was a problem updating the decode queue'}))
+
+
+class APEX_USERs(viewsets.ViewSet):
+
+	# def list(self, request):
+	# 	print('LIST RAN')
+	# 	query = User.objects.all()
+	# 	serializer = USER_Serializer(query, many=True)
+	# 	return(Response(serializer.data))
+
+	def create(self, request):	
+		print('CREATE RAN')
+
+		try: 
+			print(request.data)
+			user = authenticate(username=request.data['email'], password=request.data['password'])
+			if user is not None:
+				login(request, user)
+			token = Token.objects.get(user_id=user)
+			return(Response({'token' : str(token), 'first_name': user.first_name, 'last_name': user.last_name	}))
+		except:
+			return(Response({'Unable to authenticate user. Please try again.'}))
+
+
+class LIST_APEX_USERs(viewsets.ViewSet):
+
+	permission_classes = [IsAuthenticated]
+
+	def list(self, request):
+		query = User.objects.all().order_by('-last_login')
+		serializer = USER_Serializer(query, many=True)
+		return(Response(serializer.data))

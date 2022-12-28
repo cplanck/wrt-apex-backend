@@ -8,11 +8,16 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-yj0q71wwk6(^l0_ie%u_1zi4khqysnrjed3)ziq*13tn7cq$n='
+SECRET_KEY = 'xlwwg60%z)f5(f_m4girc7494m$471oel303o*qxhmh$njsb1h'
 
-DEBUG = True
+# DEBUG = True if env('DEBUG') == 'True' else DEBUG = False
 
-ALLOWED_HOSTS = []
+if env('DEBUG') == 'True':
+    DEBUG = True
+else:
+    DEBUG = False
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,9 +46,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+	   'rest_framework.authentication.BasicAuthentication',
+	   'rest_framework.authentication.SessionAuthentication',
+       	'rest_framework.authentication.TokenAuthentication',)
+}
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'apex_backend.urls'
+
+AUTHENTICATION_BACKENDS = ['api.email_authentication.EmailBackend']
 
 TEMPLATES = [
     {
@@ -62,14 +76,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'apex_backend.wsgi.application'
-
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 DATABASES = {
 	 'default': {

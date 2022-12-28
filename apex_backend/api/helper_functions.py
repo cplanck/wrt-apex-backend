@@ -39,7 +39,6 @@ def haversine_formula(lat1, long1, lat2, long2):
 
 def apex_area_swept(rawdata_list):
 
-    print('YOU MADE IT HERE')
     data = json.loads(rawdata_list)
     meters_traveled = 0
     total_time = 0
@@ -52,8 +51,8 @@ def apex_area_swept(rawdata_list):
         long2 = float(data[i+1]['longitude'])
         dt = get_second_delta(data[i]['gps_hhmmss'], data[i+1]['gps_hhmmss'])
 
-        print('\nMETERS TRAVELLED: {}'.format(haversine_formula(lat1, long1, lat2, long2)))
-        print('TIME DELTA: {} SECONDS'.format(dt))
+        # print('\nMETERS TRAVELLED: {}'.format(haversine_formula(lat1, long1, lat2, long2)))
+        # print('TIME DELTA: {} SECONDS'.format(dt))
 
         meters_traveled = meters_traveled + haversine_formula(lat1, long1, lat2, long2)
         total_time = total_time + dt
