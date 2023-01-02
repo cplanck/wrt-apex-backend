@@ -31,7 +31,6 @@ class APEX(models.Model):
 class DEPLOYMENT_SITE(models.Model):
     name = models.CharField(max_length = 100) 
     directory_name = models.CharField(max_length = 100, default='') 
-    contact = models.ForeignKey(CUSTOMER, on_delete=models.CASCADE, related_name = 'apex_deployment', null=True, blank=True)
     location = models.CharField(max_length=100, blank=True)
     street = models.CharField(max_length=100, blank=True)
     city = models.CharField(max_length=100, blank=True)
@@ -48,6 +47,7 @@ class DEPLOYMENT_SITE(models.Model):
 
 class APEX_DEPLOYMENT(models.Model):
     apex = models.ForeignKey(APEX, on_delete=models.CASCADE, related_name = 'apex', blank=True, null=True)
+    contact = models.ForeignKey(CUSTOMER, on_delete=models.CASCADE, related_name = 'apex_deployment', null=True, blank=True)
     status = models.BooleanField(default=False)
     queue_for_decode = models.BooleanField(default=False)
     deployment_site = models.ForeignKey(DEPLOYMENT_SITE, on_delete=models.CASCADE, related_name = 'deployment_site', blank=True, null=True)
